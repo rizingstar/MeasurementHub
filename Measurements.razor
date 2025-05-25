@@ -1,0 +1,25 @@
+@page "/measurements"
+@using MeasurementHub.Client.Shared.Models
+@inject HttpClient Http
+
+<PageTitle>Measurements</PageTitle>
+
+<h3>Measurements</h3>
+
+<TelerikGrid Data="@measurements" Pageable="true" Height="400px">
+    <GridColumns>
+        <GridColumn Field="Type" Title="Type" />
+        <GridColumn Field="Value" Title="Value" />
+        <GridColumn Field="Timestamp" Title="Timestamp" />
+        <GridColumn Field="CompanyName" Title="Company" />
+    </GridColumns>
+</TelerikGrid>
+
+@code {
+    private List<MeasurementDto> measurements = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        measurements = await Http.GetFromJsonAsync<List<MeasurementDto>>("https://localhost:5001/api/measurements");
+    }
+}
