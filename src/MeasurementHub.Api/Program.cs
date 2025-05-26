@@ -1,58 +1,22 @@
-using MeasurementHub.Persistence;
-using Microsoft.OpenApi.Models;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
-using MeasurementHub.Persistence;
-using Microsoft.EntityFrameworkCore;
-using MeasurementHub.Domain;
+using MeasurementHub.Domain.Interfaces;
+using MeasurementHub.Infrastructure;
+using MediatR;
+using Microsoft.EntityFrameworkCore; // Add this using directive for 'UseInMemoryDatabase'
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    c.SwaggerDoc("v1", new OpenApiInfo { Title = "MeasurementHub API", Version = "v1" });
-});
 builder.Services.AddDbContext<MeasurementDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseInMemoryDatabase("MeasurementDb")); // This requires the Microsoft.EntityFrameworkCore namespace
 
+builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
+builder.Services.AddMediatR(typeof(CreateMeasurementCommandHandler).Assembly);
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "MeasurementHub API v1"));
-}
-
-app.UseHttpsRedirection();
-
-var summaries = new[]
-{
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast");
-
+app.UseSwagger();
+app.UseSwaggerUI();
+app.MapControllers();
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

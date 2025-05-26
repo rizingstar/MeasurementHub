@@ -1,5 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using MeasurementHub.Domain;
+﻿using MeasurementHub.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace MeasurementHub.Persistence
 {

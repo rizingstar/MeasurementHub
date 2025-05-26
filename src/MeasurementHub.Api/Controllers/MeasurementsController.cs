@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using MeasurementHub.Domain;
+﻿using MeasurementHub.Domain.Entities;
 using MeasurementHub.Persistence;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace MeasurementHub.Api.Controllers
 {

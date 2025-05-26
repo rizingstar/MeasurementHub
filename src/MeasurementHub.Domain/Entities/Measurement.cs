@@ -1,4 +1,4 @@
-﻿namespace MeasurementHub.Domain
+﻿namespace MeasurementHub.Domain.Entities
 {
     public class Measurement
     {
