@@ -62,9 +62,10 @@ MeasurementHub/
 ### 🛠️ Setup Instructions
 
 1. **Clone the repository**
-   ```bash
+   ``bash
    git clone https://github.com/rizingstar/MeasurementHub.git
    cd MeasurementHub/src
+---
 
 | Method | Endpoint                 | Description            |
 | ------ | ------------------------ | ---------------------- |
@@ -74,3 +75,21 @@ MeasurementHub/
 | PUT    | `/api/measurements/{id}` | Update measurement     |
 | DELETE | `/api/measurements/{id}` | Delete measurement     |
 
+---
+
+💡 Learnings & Design Choices
+Implemented CQRS pattern using IRequestHandler<TRequest, TResponse> for command/query segregation.
+
+Used Clean Architecture to enforce layer separation:
+
+Domain: Business rules
+
+Application: Use-cases, handlers
+
+Infrastructure: EF Core logic
+
+API: Only orchestration via Controllers + MediatR
+
+Dependency Injection ensures testability and decoupling.
+
+Blazor WASM acts as lightweight SPA frontend, consuming REST API.
