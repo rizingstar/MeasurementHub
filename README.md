@@ -93,3 +93,17 @@ API: Only orchestration via Controllers + MediatR
 Dependency Injection ensures testability and decoupling.
 
 Blazor WASM acts as lightweight SPA frontend, consuming REST API.
+
+---
+
+👨‍💻 Author
+Noman Khan
+.NET Full Stack Developer | Clean Architecture Advocate | Houston, TX
+LinkedIn Profile (https://www.linkedin.com/in/Nomanakhan/)
+
+---
+
+📜 License
+This project is licensed under the MIT License.
+
+---
