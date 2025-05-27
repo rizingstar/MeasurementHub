@@ -6,5 +6,8 @@ namespace MeasurementHub.Domain.Interfaces
     {
         Task AddAsync(Measurement measurement);
         Task<IEnumerable<Measurement>> GetAllAsync();
+        Task<Measurement?> GetByIdAsync(Guid id);
+        Task UpdateAsync(Measurement measurement);
+        Task DeleteAsync(Measurement measurement);
     }
 }

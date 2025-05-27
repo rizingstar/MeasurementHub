@@ -1,20 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MeasurementHub.Domain.Entities
+﻿namespace MeasurementHub.Application.DTOs
 {
-    public class Measurement
+    public class MeasurementDto
     {
-        [Key]
         public Guid Id { get; set; }
-
-        [Required]
         public string Type { get; set; }
-
-        [Required]
         public decimal Value { get; set; }
-
         public DateTime Timestamp { get; set; }
-
         public string CompanyName { get; set; }
     }
 }

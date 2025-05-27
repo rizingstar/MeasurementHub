@@ -22,5 +22,22 @@ namespace MeasurementHub.Infrastructure
         {
             return await _context.Measurements.ToListAsync();
         }
+
+        public async Task<Measurement?> GetByIdAsync(Guid id)
+        {
+            return await _context.Measurements.FindAsync(id);
+        }
+
+        public async Task UpdateAsync(Measurement measurement)
+        {
+            _context.Measurements.Update(measurement);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(Measurement measurement)
+        {
+            _context.Measurements.Remove(measurement);
+            await _context.SaveChangesAsync();
+        }
     }
 }

@@ -21,18 +21,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{EFF41E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementHub.Client", "src\MeasurementHub.Client\Client\MeasurementHub.Client.csproj", "{4047ADE8-6F0A-4F0F-8D9B-D786FDF70026}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Shared", "Shared", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Models", "Models", "{4166D24F-2D72-4D00-ADA7-A840BE6498C0}"
-	ProjectSection(SolutionItems) = preProject
-		MeasurementDto.cs = MeasurementDto.cs
-	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Pages", "Pages", "{D39D82B7-F7E0-4518-968C-D785B38E3381}"
-	ProjectSection(SolutionItems) = preProject
-		Measurements.razor = Measurements.razor
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MeasurementHub.Client.Shared", "src\MeasurementHub.Client\Shared\MeasurementHub.Client.Shared.csproj", "{06D5B064-93E5-BFC2-32AF-3D430A66D644}"
 EndProject
 Global
@@ -142,9 +130,6 @@ Global
 		{1AAC44D2-4F2B-C5D1-4466-1D2E7FEC188E} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{EFF41EAF-7CF4-9A33-F85A-3F30C9037CC3} = {1AAC44D2-4F2B-C5D1-4466-1D2E7FEC188E}
 		{4047ADE8-6F0A-4F0F-8D9B-D786FDF70026} = {EFF41EAF-7CF4-9A33-F85A-3F30C9037CC3}
-		{02EA681E-C7D8-13C7-8484-4AC65E1B71E8} = {1AAC44D2-4F2B-C5D1-4466-1D2E7FEC188E}
-		{4166D24F-2D72-4D00-ADA7-A840BE6498C0} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
-		{D39D82B7-F7E0-4518-968C-D785B38E3381} = {EFF41EAF-7CF4-9A33-F85A-3F30C9037CC3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {BF3BBEA1-860F-47F9-936B-7CDC69FE7101}

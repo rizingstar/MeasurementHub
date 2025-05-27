@@ -1,7 +1,8 @@
-﻿using MeasurementHub.Domain.Entities;
-using MeasurementHub.Persistence;
+﻿using MeasurementHub.Application.DTOs;
+using MeasurementHub.Application.Measurements.Commands;
+using MeasurementHub.Application.Measurements.Queries;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace MeasurementHub.Api.Controllers
 {
@@ -9,56 +10,52 @@ namespace MeasurementHub.Api.Controllers
     [Route("api/[controller]")]
     public class MeasurementsController : ControllerBase
     {
-        private readonly MeasurementDbContext _db;
+        private readonly IMediator _mediator;
 
-        public MeasurementsController(MeasurementDbContext db)
+        public MeasurementsController(IMediator mediator)
         {
-            _db = db;
+            _mediator = mediator;
+        }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<MeasurementDto>>> Get()
+        {
+            var result = await _mediator.Send(new GetAllMeasurementsQuery());
+            return Ok(result);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Measurement>>> GetMeasurements()
-            => await _db.Measurements.ToListAsync();
-
         [HttpGet("{id}")]
-        public async Task<ActionResult<Measurement>> GetMeasurement(Guid id)
+        public async Task<ActionResult<MeasurementDto>> GetById(Guid id)
         {
-            var m = await _db.Measurements.FindAsync(id);
-            if (m == null) return NotFound();
-            return m;
+            var result = await _mediator.Send(new GetMeasurementByIdQuery(id));
+            if (result == null) return NotFound();
+            return Ok(result);
         }
 
         [HttpPost]
-        public async Task<ActionResult<Measurement>> PostMeasurement(Measurement measurement)
+        public async Task<ActionResult<Guid>> Create([FromBody] CreateMeasurementCommand command)
         {
-            _db.Measurements.Add(measurement);
-            await _db.SaveChangesAsync();
-            return CreatedAtAction(nameof(GetMeasurement), new { id = measurement.Id }, measurement);
+            var id = await _mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id }, id);
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutMeasurement(Guid id, Measurement input)
+        public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMeasurementCommand command)
         {
-            var measurement = await _db.Measurements.FindAsync(id);
-            if (measurement == null) return NotFound();
+            if (id != command.Id)
+                return BadRequest("ID mismatch");
 
-            measurement.Type = input.Type;
-            measurement.Value = input.Value;
-            measurement.Timestamp = input.Timestamp;
-            measurement.CompanyName = input.CompanyName;
+            var success = await _mediator.Send(command);
+            if (!success) return NotFound();
 
-            await _db.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteMeasurement(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var measurement = await _db.Measurements.FindAsync(id);
-            if (measurement == null) return NotFound();
+            var success = await _mediator.Send(new DeleteMeasurementCommand(id));
+            if (!success) return NotFound();
 
-            _db.Measurements.Remove(measurement);
-            await _db.SaveChangesAsync();
             return NoContent();
         }
     }
