@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<MeasurementDbContext>(options =>
-    options.UseInMemoryDatabase("MeasurementDb"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped<IMeasurementRepository, MeasurementRepository>();
 builder.Services.AddMediatR(cfg => {
