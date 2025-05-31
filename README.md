@@ -1,4 +1,4 @@
-# 📏 MeasurementHub
+# 📏 MeasurementHub, ASP.NET Core C# CQRS REST API MediatR Clean Architecture
 
 **MeasurementHub** is a modular, full-stack demo application built using **ASP.NET Core**, **Blazor WebAssembly**, **Entity Framework Core**, and **Clean Architecture** principles with **CQRS** pattern and **MediatR** integration.
 
