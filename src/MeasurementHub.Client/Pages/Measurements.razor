@@ -1,0 +1,47 @@
+﻿@page "/measurements"
+@inject MeasurementHub.Client.Services.MeasurementService MeasurementService
+
+<h3>Measurements</h3>
+
+@if (measurements == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (!measurements.Any())
+{
+    <p>No measurements found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Type</th>
+                <th>Value</th>
+                <th>Timestamp</th>
+                <th>Company Name</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var m in measurements)
+            {
+                <tr>
+                    <td>@m.Id</td>
+                    <td>@m.Type</td>
+                    <td>@m.Value</td>
+                    <td>@m.Timestamp.ToString("g")</td>
+                    <td>@m.CompanyName</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<MeasurementHub.Client.Models.Measurement> measurements;
+    protected override async Task OnInitializedAsync()
+    {
+        measurements = await MeasurementService.GetMeasurementsAsync();
+    }
+}

@@ -1,0 +1,88 @@
+﻿@page "/"
+@using Telerik.Blazor.Components
+@inject MeasurementHub.Client.Services.MeasurementService MeasurementService
+
+<h3 class="mb-4">Add Measurement</h3>
+<EditForm Model="newMeasurement" OnValidSubmit="AddMeasurementAsync" class="mb-4">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="mb-3">
+        <label class="form-label">Type</label>
+        <TelerikTextBox @bind-Value="newMeasurement.Type" Class="w-100" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Value</label>
+        <TelerikNumericTextBox @bind-Value="newMeasurement.Value" Class="w-100" Decimals="2" />
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Company Name</label>
+        <TelerikTextBox @bind-Value="newMeasurement.CompanyName" Class="w-100" />
+    </div>
+    <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="primary">Add</TelerikButton>
+</EditForm>
+
+<h3 class="mb-4">Measurements</h3>
+@if (measurements == null)
+{
+    <TelerikLoader Size="LoaderSize.Large" />
+}
+else if (!measurements.Any())
+{
+    <p>No measurements found.</p>
+}
+else
+{
+    <TelerikGrid Data="@measurements" Height="400px" Pageable="true" Sortable="true" FilterMode="GridFilterMode.FilterRow">
+        <GridColumns>
+            <GridColumn Field="Id" Title="Id" />
+            <GridColumn Field="Type" Title="Type" />
+            <GridColumn Field="Value" Title="Value" />
+            <GridColumn Field="Timestamp" Title="Timestamp">
+                <Template>
+                    @{
+                        var m = (MeasurementHub.Client.Models.Measurement)context;
+                    }
+                    @m.Timestamp.ToString("g")
+                </Template>
+            </GridColumn>
+            <GridColumn Field="CompanyName" Title="Company Name" />
+        </GridColumns>
+    </TelerikGrid>
+}
+
+@code {
+    private List<MeasurementHub.Client.Models.Measurement> measurements;
+    private NewMeasurementModel newMeasurement = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadMeasurementsAsync();
+    }
+
+    private async Task LoadMeasurementsAsync()
+    {
+        measurements = await MeasurementService.GetMeasurementsAsync();
+    }
+
+    private async Task AddMeasurementAsync()
+    {
+        var response = await MeasurementService.AddMeasurementAsync(
+            newMeasurement.Type,
+            newMeasurement.Value,
+            newMeasurement.CompanyName
+        );
+        if (response)
+        {
+            await LoadMeasurementsAsync();
+            newMeasurement = new();
+        }
+    }
+
+    public class NewMeasurementModel
+    {
+        public string Type { get; set; }
+        public decimal Value { get; set; }
+        public string CompanyName { get; set; }
+    }
+}

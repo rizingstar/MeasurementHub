@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.16" />
-    <PackageReference Include="Telerik.UI.for.Blazor.Trial" Version="8.1.1" />
   </ItemGroup>
 
 </Project>
