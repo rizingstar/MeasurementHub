@@ -15,7 +15,10 @@ builder.Services.AddMediatR(cfg => {
 });
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(); // <-- ADD THIS LINE
+builder.Services.AddSwaggerGen(c =>
+{
+    c.CustomSchemaIds(type => type.FullName);
+});
 builder.Services.AddAutoMapper(typeof(MeasurementDto).Assembly);
 builder.Services.AddCors(options =>
 {
@@ -31,8 +34,18 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
                      .AddEnvironmentVariables();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<MeasurementDbContext>();
+    db.Database.Migrate();
+}
 
 app.UseCors();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
 
 app.UseSwagger();
 app.UseSwaggerUI(); // <-- It's also standard to add this line for the Swagger UI

@@ -15,19 +15,21 @@ namespace MeasurementHub.Application.Measurements.Handlers
 			_repo = repo;
 		}
 
-		public async Task<MeasurementDto?> Handle(GetMeasurementByIdQuery request, CancellationToken cancellationToken)
-		{
-			var m = await _repo.GetByIdAsync(request.Id);
-			if (m == null) return null;
+        public async Task<MeasurementDto?> Handle(GetMeasurementByIdQuery request, CancellationToken cancellationToken)
+        {
+            var m = await _repo.GetByIdAsync(request.Id);
+            if (m == null) return null;
 
-			return new MeasurementDto
-			{
-				Id = m.Id,
-				Type = m.Type,
-				Value = m.Value,
-				Timestamp = m.Timestamp,
-				CompanyName = m.CompanyName
-			};
-		}
-	}
+            return new MeasurementDto
+            {
+                Id = m.Id,
+                Type = m.Type,
+                Value = m.Value,
+                Timestamp = m.Timestamp,
+                CompanyName = m.CompanyName,
+                Notes = m.Notes,        
+                Status = m.Status      
+            };
+        }
+    }
 }

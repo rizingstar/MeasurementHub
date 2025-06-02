@@ -29,6 +29,8 @@ namespace MeasurementHub.Application.Measurements.Handlers
             existing.Value = request.Value;
             existing.Timestamp = request.Timestamp;
             existing.CompanyName = request.CompanyName;
+            existing.Notes = request.Notes; 
+            existing.Status = request.Status;    
 
             await _repo.UpdateAsync(existing);
             return true;

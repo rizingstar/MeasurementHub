@@ -23,7 +23,9 @@ namespace MeasurementHub.Application.Measurements.Handlers
                 Type = m.Type,
                 Value = m.Value,
                 Timestamp = m.Timestamp,
-                CompanyName = m.CompanyName
+                CompanyName = m.CompanyName,
+                Notes = m.Notes,         
+                Status = m.Status        
             }).ToList();
         }
     }
