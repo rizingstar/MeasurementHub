@@ -1,7 +1,7 @@
-﻿using MeasurementHub.Shared;
+﻿// Measurement.cs
 using System.ComponentModel.DataAnnotations;
 
-namespace MeasurementHub.Client.Models
+namespace MeasurementHub.Shared
 {
     public class Measurement
     {

@@ -1,25 +1,44 @@
 ﻿@page "/"
 @using Telerik.Blazor.Components
+@using MeasurementHub.Shared
 @inject MeasurementHub.Client.Services.MeasurementService MeasurementService
 
 <h3 class="mb-4">Add Measurement</h3>
-<EditForm Model="newMeasurement" OnValidSubmit="AddMeasurementAsync" class="mb-4">
+<EditForm Model="@newMeasurement" OnValidSubmit="@AddMeasurementAsync">
     <DataAnnotationsValidator />
     <ValidationSummary />
 
-    <div class="mb-3">
-        <label class="form-label">Type</label>
-        <TelerikTextBox @bind-Value="newMeasurement.Type" Class="w-100" />
+    <div class="mb-2">
+        <label>Type: </label>
+        <InputText @bind-Value="newMeasurement.Type" class="form-control" />
     </div>
-    <div class="mb-3">
-        <label class="form-label">Value</label>
-        <TelerikNumericTextBox @bind-Value="newMeasurement.Value" Class="w-100" Decimals="2" />
+    <div class="mb-2">
+        <label>Value: </label>
+        <InputNumber @bind-Value="newMeasurement.Value" class="form-control" />
     </div>
-    <div class="mb-3">
-        <label class="form-label">Company Name</label>
-        <TelerikTextBox @bind-Value="newMeasurement.CompanyName" Class="w-100" />
+    <div class="mb-2">
+        <label>Timestamp: </label>
+        <InputDate @bind-Value="newMeasurement.Timestamp" class="form-control" />
     </div>
-    <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="primary">Add</TelerikButton>
+    <div class="mb-2">
+        <label>Company Name: </label>
+        <InputText @bind-Value="newMeasurement.CompanyName" class="form-control" />
+    </div>
+    <div class="mb-2">
+        <label>Notes: </label>
+        <InputText @bind-Value="newMeasurement.Notes" class="form-control" />
+    </div>
+    <div class="mb-2">
+        <label>Status: </label>
+        <InputSelect @bind-Value="newMeasurement.Status" class="form-control">
+            <option value="">-- Select Status --</option>
+            @foreach (var status in StatusOptions)
+            {
+                <option value="@status">@status</option>
+            }
+        </InputSelect>
+    </div>
+    <button type="submit" class="btn btn-primary">Add</button>
 </EditForm>
 
 <h3 class="mb-4">Measurements</h3>
@@ -39,21 +58,21 @@ else
             <GridColumn Field="Type" Title="Type" />
             <GridColumn Field="Value" Title="Value" />
             <GridColumn Field="Timestamp" Title="Timestamp">
-                <Template>
-                    @{
-                        var m = (MeasurementHub.Client.Models.Measurement)context;
-                    }
-                    @m.Timestamp.ToString("g")
+                <Template Context="item">
+                    @(((Measurement)item).Timestamp.ToString("g"))
                 </Template>
             </GridColumn>
             <GridColumn Field="CompanyName" Title="Company Name" />
+            <GridColumn Field="Notes" Title="Notes" />
+            <GridColumn Field="Status" Title="Status" />
         </GridColumns>
     </TelerikGrid>
 }
 
 @code {
-    private List<MeasurementHub.Client.Models.Measurement> measurements;
-    private NewMeasurementModel newMeasurement = new();
+    private List<Measurement> measurements;
+    private Measurement newMeasurement = new Measurement();
+    private static readonly string[] StatusOptions = new[] { "Pending", "Approved", "Rejected" };
 
     protected override async Task OnInitializedAsync()
     {
@@ -62,27 +81,39 @@ else
 
     private async Task LoadMeasurementsAsync()
     {
-        measurements = await MeasurementService.GetMeasurementsAsync();
+        // Get client models and map to shared models for the UI
+        var clientMeasurements = await MeasurementService.GetMeasurementsAsync();
+        measurements = clientMeasurements.Select(m => new Measurement
+        {
+            Id = m.Id,
+            Type = m.Type,
+            Value = m.Value,
+            Timestamp = m.Timestamp,
+            CompanyName = m.CompanyName,
+            Notes = m.Notes,
+            Status = m.Status // adjust as needed if enum
+        }).ToList();
     }
 
     private async Task AddMeasurementAsync()
     {
-        var response = await MeasurementService.AddMeasurementAsync(
-            newMeasurement.Type,
-            newMeasurement.Value,
-            newMeasurement.CompanyName
-        );
+        // Map shared model (UI) to client model before calling service
+        var clientMeasurement = new MeasurementHub.Client.Models.Measurement
+        {
+            Id = newMeasurement.Id,
+            Type = newMeasurement.Type,
+            Value = newMeasurement.Value,
+            Timestamp = newMeasurement.Timestamp,
+            CompanyName = newMeasurement.CompanyName,
+            Notes = newMeasurement.Notes,
+            Status = newMeasurement.Status
+        };
+
+        var response = await MeasurementService.AddMeasurementAsync(clientMeasurement);
         if (response)
         {
             await LoadMeasurementsAsync();
-            newMeasurement = new();
+            newMeasurement = new Measurement();
         }
-    }
-
-    public class NewMeasurementModel
-    {
-        public string Type { get; set; }
-        public decimal Value { get; set; }
-        public string CompanyName { get; set; }
     }
 }

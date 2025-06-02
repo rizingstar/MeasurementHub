@@ -1,6 +1,7 @@
 ﻿using MeasurementHub.Application.DTOs;
 using MeasurementHub.Application.Measurements.Commands;
 using MeasurementHub.Application.Measurements.Queries;
+using MeasurementHub.Shared;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -32,11 +33,26 @@ namespace MeasurementHub.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Guid>> Create([FromBody] CreateMeasurementCommand command)
+        public async Task<ActionResult<Guid>> Create([FromBody] Measurement model)
         {
+            var statusEnum = (MeasurementHub.Domain.Entities.MeasurementStatus)
+                Enum.Parse(typeof(MeasurementHub.Domain.Entities.MeasurementStatus), model.Status.ToString());
+
+
+            // Pass all required params to the Command constructor
+            var command = new CreateMeasurementCommand(
+                model.Type,
+                model.Value,
+                model.Timestamp == default ? DateTime.UtcNow : model.Timestamp, // ensure not default
+                model.CompanyName,
+                model.Notes,
+                statusEnum
+            );
+
             var id = await _mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id }, id);
         }
+
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] UpdateMeasurementCommand command)

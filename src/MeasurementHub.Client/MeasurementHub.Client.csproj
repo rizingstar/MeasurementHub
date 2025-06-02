@@ -13,4 +13,8 @@
 	<PackageReference Include="Telerik.UI.for.Blazor" Version="9.0" PrivateAssets="none" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\MeasurementHub.Shared\MeasurementHub.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

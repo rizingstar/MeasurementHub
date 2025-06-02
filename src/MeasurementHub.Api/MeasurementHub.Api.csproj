@@ -21,6 +21,7 @@
 		<ProjectReference Include="..\MeasurementHub.Application\MeasurementHub.Application.csproj" />
 		<ProjectReference Include="..\MeasurementHub.Infrastructure\MeasurementHub.Infrastructure.csproj" />
 		<ProjectReference Include="..\MeasurementHub.Persistence\MeasurementHub.Persistence.csproj" />
+		<ProjectReference Include="..\MeasurementHub.Shared\MeasurementHub.Shared.csproj" />
 	</ItemGroup>
 
 </Project>
